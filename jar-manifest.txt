@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: lt
+Class-Manager: uk.ac.hutton.lt.StructuredLookupTableExtension
+NetLogo-Extension-API-Version: 6.1

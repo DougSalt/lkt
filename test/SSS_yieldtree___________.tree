@@ -1,0 +1,9 @@
+Climate
+	NoClimate
+		NoClimate UpClimate DownClimate
+Biophysical
+	NoBiophys
+		NoBiophys
+LandUse
+	LandUse
+		GL1	GL2	GL3	AL1	AL2	AL3
