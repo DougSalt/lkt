@@ -1,36 +1,98 @@
-extensions [lt]
+extensions [lt table]
 
-to setup
+to example
 
-  let some-table lt:new "/home/doug/git/lt/test/SSS_yieldtree___________.tree"
-    "/home/doug/git/lt/test/SSS_yielddata___________.data"
+  let tree-path "/home/doug/git/lt/test/lt.tree"
+  let data-path  "/home/doug/git/lt/test/lt.data"
+
+  lt:default "I am a default value"
+
+  let expected-groups ["Climate" "Biophysical" "LandUse"]
+
+  let expected-dimensions-and-symbols table:from-list [
+    ["NoClimate" [ "NoClimate" "UpClimate" "DownClimate"] ]
+    ["NoBiophys" [ "NoBiophys"] ]
+    ["LandUse"   ["GL1" "GL2" "GL3" "AL1" "AL2" "AL3"] ]
+  ]
+
+  let expected-states table:from-list [
+    ["NoClimate   NoBiophys   GL1" "4.0"]
+    ["NoClimate   NoBiophys   GL2" "5.0"]
+    ["NoClimate   NoBiophys   GL3" "6.0"]
+    ["NoClimate   NoBiophys   AL1" "4.5"]
+    ["NoClimate   NoBiophys   AL2" "Pickle"]
+    ["NoClimate   NoBiophys   AL3" "6.5"]
+    ["DownClimate *   *"   "7.0"]
+  ]
+
+  show table:values expected-states
+  show table:values expected-states
+  show table:values expected-states
+  let expected-dimensions table:keys expected-dimensions-and-symbols
+
+  output-print (word "Table definition file is " tree-path)
+  output-print (word "Data definition file is " data-path)
+
+
+  let some-table lt:new tree-path data-path
+
   output-print (word "Dimensions" lt:dimensions some-table)
+
+  test lt:dimensions some-table
+    expected-dimensions
+    "lt:dimensions "
+
+  let dimension 0
   lt:first-dimension some-table
   while [ lt:more-dimensions? some-table ]  [
     let some-dimension lt:get-dimension some-table
-    output-print (word "     Dimension " some-dimension " in group " lt:group some-table some-dimension)
+    let some-group lt:group some-table some-dimension
+    output-print (word "     Dimension " some-dimension " in group " some-group)
+    test
+      item dimension expected-dimensions
+      some-dimension
+      "lt:get-dimension "
+    test
+      item dimension expected-groups
+      some-group
+      "lt:group "
     lt:first-symbol some-table some-dimension
+    let symbol 0
     while [ lt:more-symbols? some-table some-dimension ] [
-      output-print (word "          Symbol " lt:get-symbol some-table some-dimension)
+      let some-symbol lt:get-symbol some-table some-dimension
+      output-print (word "          Symbol " some-symbol )
+      test
+        item symbol table:get expected-dimensions-and-symbols some-dimension
+        some-symbol
+        "lt:get-symbol "
+      set symbol symbol + 1
     ]
+    set dimension dimension + 1
   ]
 
-  output-print (word "States: " lt:states some-table)
+  test sort lt:states some-table sort table:values expected-states "lt:states"
   lt:first-state some-table
+
   while [ lt:more-states? some-table ] [
     let result lt:get-state some-table
     output-print (word "state: " result)
   ]
 
-  output-print (word "Picking one (should be 5.0): " lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] )
-  output-print (word "Setting this to 29.0")
-  lt:Set some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] 29.0
-  output-print (word "Picking one (should be 29.0): " lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] )
+  test lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "5.0" "lt:get "
+  lt:set some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "29.0"
+  test lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "29.0" "lt:set "
+  test lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "Imaginary"] "I am a default value" "lt:default "
 
+end
 
-  lt:default "I am a silly value"
-  output-print (word "Picking one (should default): " lt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "Imaginary"] )
-
+to test [actual-value expected-value message]
+  if actual-value != expected-value [
+    error (word "lt: "
+      message
+      " expected: " expected-value
+      " got: " actual-value
+    )
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -65,8 +127,8 @@ BUTTON
 70
 107
 103
-Set up
-setup
+Test
+example
 NIL
 1
 T
@@ -100,7 +162,217 @@ Dim_1_symbol_1 Dim_2_symbol_1  Dim_3_symbol outcome_1
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+### new
+
+Creates a lookup table.
+
+A lookup table.
+
+This look up table definition file looks is made of the following atoms.
+
+
+```
+group_name_1 (group)
+	dimension_1 (dimension)
+		dimension_1_value_1 (value)
+		dimension_1_value_2
+		...
+	dimension_2
+	   	dimension_2_value_1
+		dimension_2_value_2
+		...
+	...
+group_name_2
+	dimension_3_value_1
+	...
+...
+
+```
+
+where the spaces _must_ be tabs (so check your editor does not replace tabs with spaces). Atoms may only contain numeric and alphabetic upper case or lower case letters. There are case sensitive.
+
+
+That is there are *values* which are the nominals for a *dimension* a dimension belongs to a *group*. *group*
+
+#### Parameters
+
++ *Table definition file* This contains a space delimited definition file for the look up table.
+
++ *Data file* This is space delimited file contain values in the form of a standard CSV where commas have been replaced with spaces. This of course means that dimensions may 
+
+#### Returns
+
+A lookup table (lookup table object).
+
+### dimensions
+
+Returns a list of possible dimensions from the lookup table definition file.
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A list of dimension names. (list)
+
+### first-dimension
+
+Reset a dimenension iterator over a lookup table definition file to the first dimension
+
+#### Parameters
+
++ Table definition file (lookup table object)
+
+#### Returns
+
+Nothing.
+
+### get-dimension
+
+Gets the next dimension in the lookup table definition file.
+
+#### Parameters
+
++ Table definition file (lookup table object)
+
+#### Returns
+
+The dimension name (string).
+
+### more-dimensions?
+
+Returns true if the are more dimensions in lookup table definition file to inspect, false otherwise.
+
+#### Parameters
+
++ Table definition file (lookup table object)
+
+#### Returns
+
+True or False.
+
+### symbols
+
+Returns a list of symbols from a lookup table definition file.
+
+#### Parameters
+
++ Table definition file (lookup table object)
+
++ Dimension (string)
+
+#### Returns
+
+A lookup table.
+
+### first-symbol
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+### get-symbol
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### more-symbols?
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### get 
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### states
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### first-state
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### get-state
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### more-states?
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+
+### group
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### set 
+
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+A lookup table.
+
+### default
+
+Set the default value returned
+#### Parameters
+
++ A look up table (lookup table object)
+
+#### Returns
+
+Nothing
 
 ## THINGS TO NOTICE
 
