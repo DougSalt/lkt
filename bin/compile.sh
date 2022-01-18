@@ -30,25 +30,25 @@ fi
 bin/clean.sh 2>/dev/null
 
 "$JAVAC" -d bin -cp $CLASS_PATH \
-    src/uk/ac/hutton/lt/Default.java \
-	src/uk/ac/hutton/lt/Dimension.java \
-	src/uk/ac/hutton/lt/Dimensions.java \
-	src/uk/ac/hutton/lt/FirstDimension.java \
-	src/uk/ac/hutton/lt/FirstState.java \
-	src/uk/ac/hutton/lt/FirstSymbol.java \
-	src/uk/ac/hutton/lt/GetDimension.java \
-	src/uk/ac/hutton/lt/Get.java \
-	src/uk/ac/hutton/lt/GetState.java \
-	src/uk/ac/hutton/lt/GetSymbol.java \
-	src/uk/ac/hutton/lt/Group.java \
-	src/uk/ac/hutton/lt/LookupTable.java \
-	src/uk/ac/hutton/lt/MoreDimensions.java \
-	src/uk/ac/hutton/lt/MoreStates.java \
-	src/uk/ac/hutton/lt/MoreSymbols.java \
-	src/uk/ac/hutton/lt/NetLogoLookupTable.java \
-	src/uk/ac/hutton/lt/New.java \
-	src/uk/ac/hutton/lt/SetState.java \
-	src/uk/ac/hutton/lt/States.java \
-	src/uk/ac/hutton/lt/StructuredLookupTableExtension.java \
-	src/uk/ac/hutton/lt/StructuredLookupTable.java \
-	src/uk/ac/hutton/lt/Symbols.java
+    src/uk/ac/hutton/lkt/Default.java \
+	src/uk/ac/hutton/lkt/Dimension.java \
+	src/uk/ac/hutton/lkt/Dimensions.java \
+	src/uk/ac/hutton/lkt/FirstDimension.java \
+	src/uk/ac/hutton/lkt/FirstState.java \
+	src/uk/ac/hutton/lkt/FirstSymbol.java \
+	src/uk/ac/hutton/lkt/GetDimension.java \
+	src/uk/ac/hutton/lkt/Get.java \
+	src/uk/ac/hutton/lkt/GetState.java \
+	src/uk/ac/hutton/lkt/GetSymbol.java \
+	src/uk/ac/hutton/lkt/Group.java \
+	src/uk/ac/hutton/lkt/LookupTable.java \
+	src/uk/ac/hutton/lkt/MoreDimensions.java \
+	src/uk/ac/hutton/lkt/MoreStates.java \
+	src/uk/ac/hutton/lkt/MoreSymbols.java \
+	src/uk/ac/hutton/lkt/NetLogoLookupTable.java \
+	src/uk/ac/hutton/lkt/New.java \
+	src/uk/ac/hutton/lkt/SetState.java \
+	src/uk/ac/hutton/lkt/States.java \
+	src/uk/ac/hutton/lkt/StructuredLookupTableExtension.java \
+	src/uk/ac/hutton/lkt/StructuredLookupTable.java \
+	src/uk/ac/hutton/lkt/Symbols.java
