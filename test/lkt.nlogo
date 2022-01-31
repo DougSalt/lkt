@@ -10,84 +10,106 @@ to example
   let expected-groups ["Climate" "Biophysical" "LandUse"]
 
   let expected-dimensions-and-symbols table:from-list [
-    ["NoClimate" [ "NoClimate" "UpClimate" "DownClimate"] ]
-    ["NoBiophys" [ "NoBiophys"] ]
-    ["LandUse"   ["GL1" "GL2" "GL3" "AL1" "AL2" "AL3"] ]
+    ["ClimateType" [ "NoClimate" "UpClimate" "DownClimate"] ]
+    ["Biophys" [ "NoBiophys" "YesBiophys"] ]
+    ["LandUse"   ["GL1" "GL2" "GL3" "AL1" "AL2" "AL3" "AL4" "AL5"] ]
   ]
+
 
   let expected-states table:from-list [
-    ["NoClimate   NoBiophys   GL1" "4.0"]
-    ["NoClimate   NoBiophys   GL2" "5.0"]
-    ["NoClimate   NoBiophys   GL3" "6.0"]
-    ["NoClimate   NoBiophys   AL1" "4.5"]
-    ["NoClimate   NoBiophys   AL2" "Pickle"]
-    ["NoClimate   NoBiophys   AL3" "6.5"]
-    ["DownClimate *   *"   "7.0"]
+    [["DownClimate" "NoBiophys" "GL1"] "4.0"]
+    [["NoClimate" "YesBiophys" "GL2"] "5.0"]
+    [["NoClimate" "*" "GL3"] "6.0"]
+    [["NoClimate" "NoBiophys" "AL1"] "4.5"]
+    [["NoClimate" "NoBiophys" "AL2"] "Pickle"]
+    [["NoClimate" "YesBiophys" "AL3"] "6.5"]
+    [["NoClimate" "YesBiophys" "AL4"] "9.0"]
+    [["NoClimate" "YesBiophys" "AL5"] "7.0"]
   ]
 
-  show table:values expected-states
-  show table:values expected-states
-  show table:values expected-states
+
   let expected-dimensions table:keys expected-dimensions-and-symbols
 
   output-print (word "Table definition file is " tree-path)
   output-print (word "Data definition file is " data-path)
-
+  output-print (Word "Starting testing...")
 
   let some-table lkt:new tree-path data-path
 
-  output-print (word "Dimensions" lkt:dimensions some-table)
+  ;output-print (word "Dimensions" lkt:dimensions some-table)
 
-  test lkt:dimensions some-table
-    expected-dimensions
-    "lkt:dimensions "
+;  test lkt:dimensions some-table
+;    expected-dimensions
+;    "dimensions "
+  let nof-dimensions length lkt:dimensions some-table
 
   let dimension 0
   lkt:first-dimension some-table
   while [ lkt:more-dimensions? some-table ]  [
     let some-dimension lkt:get-dimension some-table
     let some-group lkt:group some-table some-dimension
-    output-print (word "     Dimension " some-dimension " in group " some-group)
+    ;output-print (word "     Dimension " some-dimension " in group " some-group)
     test
       item dimension expected-dimensions
       some-dimension
-      "lkt:get-dimension "
+      "get-dimension "
     test
       item dimension expected-groups
       some-group
-      "lkt:group "
+      "group "
+    test
+      lkt:symbols some-table some-dimension
+      table:get expected-dimensions-and-symbols some-dimension
+      "symbols"
     lkt:first-symbol some-table some-dimension
     let symbol 0
     while [ lkt:more-symbols? some-table some-dimension ] [
       let some-symbol lkt:get-symbol some-table some-dimension
-      output-print (word "          Symbol " some-symbol )
+      ;output-print (word "          Symbol " some-symbol )
       test
         item symbol table:get expected-dimensions-and-symbols some-dimension
         some-symbol
-        "lkt:get-symbol "
+        "get-symbol "
       set symbol symbol + 1
+    ]
+    if dimension = 0 [
+      foreach table:keys expected-states [ some-values ->
+
+        test
+          lkt:get some-table some-values
+          table:get expected-states some-values
+          "get "
+        let old-value lkt:get some-table some-values
+        lkt:set some-table some-values "test-value"
+        test
+          lkt:get some-table some-values
+          "test-value"
+          "get "
+        lkt:set some-table some-values old-value
+      ]
     ]
     set dimension dimension + 1
   ]
 
-  test sort lkt:states some-table sort table:values expected-states "lkt:states"
+  test sort lkt:states some-table sort table:values expected-states "states"
   lkt:first-state some-table
 
   while [ lkt:more-states? some-table ] [
-    let result lkt:get-state some-table
-    output-print (word "state: " result)
+    test member? lkt:get-state some-table table:values expected-states true "get-state"
   ]
 
-  test lkt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "5.0" "lkt:get "
-  lkt:set some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "29.0"
-  test lkt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "GL2"] "29.0" "lkt:set "
-  test lkt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "Imaginary"] "I am a default value" "lkt:default "
 
+;  test lkt:get some-table "NoClimate" table:get expected-dimensions-and-symbols "NoClimate" "5.0" "get "
+;  lkt:set some-table "NoClimate" table:get expected-dimensions-and-symbols "NoClimate"  "29.0"
+;  test lkt:get some-table "NoClimate" table:get expected-dimensions-and-symbols "NoClimate" "29.0" "set "
+;  test lkt:get some-table "NoClimate" ["NoClimate" "NoBiophys" "Imaginary"] "I am a default value" "default "
+
+  output-print (Word "...ending testing.")
 end
 
 to test [actual-value expected-value message]
   if actual-value != expected-value [
-    error (word "lkt: "
+    error (word "lkt:"
       message
       " expected: " expected-value
       " got: " actual-value
@@ -96,10 +118,10 @@ to test [actual-value expected-value message]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-257
-58
+7
+107
+54
+155
 -1
 -1
 13.0
@@ -123,10 +145,10 @@ ticks
 30.0
 
 BUTTON
-28
-70
-107
-103
+4
+10
+83
+43
 Test
 example
 NIL
@@ -140,27 +162,134 @@ NIL
 1
 
 OUTPUT
-167
-114
-606
-399
+135
 12
+574
+297
+12
+
+BUTTON
+5
+48
+75
+81
+Clear
+clear-output
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
 
-This is a small program to show how the look up table extension works.
+This is a small program to show how the look up table `lkt` extension works.
 
-A look up table is of the structure
+An example of the a look up tree might be the following: 
 
-Dimension_1    Dimension_2     Dimension_3 
-Dim_1_symbol_1 Dim_2_symbol_1  Dim_3_symbol outcome_1
+```
+Player_1 | Player_2 | Outcome
+--------- ---------- --------
+Rock     | Rock     | 0
+Rock     | Paper    | 2
+Paper    | Rock     | 1
+Rock     | Scissors | 1
+Scissors | Rock     | 2
+Scissors | Scissors | 0
+Paper    | Scissors | 2
+Scissors | Paper    | 1
+Paper    | Paper    | 0
+```
+This is two players, `Player_1` and `Player_2` playing the game rock, paper, scissors.
+
+So the dimensions are `Player_1` and `Player_2`. These dimensions may only
+contain the values `Rock`, `Paper` and `Scissors` and the outcomes are
+
++ 0 - nobody wins
++ 1 - Player_1 wins
++ 2 - Player_2 wins.
+
+Thus to implement a look up table we must have two files. First a file is
+required that defines the dimensions and the allowable values for those
+dimensions. We denote this the tree file. The second files, denoted the data
+file, is  a tab delimited file using these dimension with the last column of
+such a file predicating the outcome from the previous dimension values.
+
+The dimensions are defined by in the tree file like the following.
+
+```
+group_name_1 (group)
+	dimension_1 (dimension)
+		dimension_1_value_1 (value)
+		dimension_1_value_2
+		...
+	dimension_2
+	   	dimension_2_value_1
+		dimension_2_value_2
+		...
+	...
+group_name_2
+	dimension_3_value_1
+	...
+...
+
+```
+
+This is a tree with the topmost node at the top of the file and the dimensions
+represent additional layers to the tree, with the symbols that make up those
+layers forming the nodes or branches of the tree.
+
+
+And the data file would look similar to the following:
+
+```
+| Dimension_1         | Dimension_2         | Dimension_3         | Outcome   |
+ --------------------- --------------------- --------------------- -----------
+| dimension_1_value_1 | dimension_2_value_1 | dimension_3_value_1 | outcome_1 |
+| dimension_1_value_2 | dimension_2_value_1 | dimension_3_value_1 | outcome_2 |
+| dimension_1_value_1 | dimension_2_value_2 | dimension_3_value_1 | outcome_3 |
+          .                     .                   .                  .
+          .                     .                   .                  .
+          .                     .                   .                  .
+```
+
+There is one reserved character which is the "*" character allowing the mapping
+of defaults. This must appear in both the input and the data file of the tree.
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+This is a reference program to show a simple implementation of the `lkt` extension
+
+If the "Test" button is selected and no error messages are displayed then the extension is working as expected.
 
 ## HOW TO USE IT
+
+The extensions has the following primitives. 
+
+1. new
+2. dimensions
+3. first-dimension
+4. get-dimension
+5. more-dimensions?
+6. symbols
+7. first-symbol
+8. get-symbol
+9. more-symbols?
+10. get 
+11. states
+12. first-state
+13. get-state
+14. more-states?
+15. group
+16. set 
+17. default
+
+Each of these primitives is now defined in terms of its parameters, what it returns and what its purpose is
 
 ### new
 
@@ -168,7 +297,7 @@ Creates a lookup table.
 
 A lookup table.
 
-This look up table definition file looks is made of the following atoms.
+This look up table definition file looks is made of the following atoms defined in the tree file. 
 
 
 ```
@@ -189,10 +318,29 @@ group_name_2
 
 ```
 
-where the spaces _must_ be tabs (so check your editor does not replace tabs with spaces). Atoms may only contain numeric and alphabetic upper case or lower case letters. There are case sensitive.
+where the spaces _must_ be tabs (so check your editor does not replace tabs
+with spaces). Atoms may only contain numeric and alphabetic upper case or lower
+case letters. There are case sensitive.
 
+That is there are *values* which are the nominals for a *dimension* a dimension
+belongs to a *group*. *group* are purely documentary and allow the author to
+logical group the dimensions into what makes sense. dimensions have to be
+unique with dimensions, values do not.
 
-That is there are *values* which are the nominals for a *dimension* a dimension belongs to a *group*. *group*
+The data file is of the following format.
+
+```
+Dimension_1           Dimension_2           Dimension_3           Outcome
+dimension_1_value_1   dimension_2_value_1   dimension_3_value_1   outcome_1
+dimension_1_value_2   dimension_2_value_1   dimension_3_value_1   outcome_2
+dimension_1_value_1   dimension_2_value_2   dimension_3_value_1   outcome_3
+*                     *                     dimension_3_value_1   outcome_4
+```
+
+Again this is tab delimited,  the first row represents the names of the
+dimensions and subsequent rows are values that make up the values of that
+dimension. "*" means any valid dimension found not defined in another
+combination of values.
 
 #### Parameters
 
@@ -218,7 +366,8 @@ A list of dimension names. (list)
 
 ### first-dimension
 
-Reset a dimenension iterator over a lookup table definition file to the first dimension
+Reset a dimension iterator over a lookup table definition file to the first
+dimension.
 
 #### Parameters
 
@@ -242,7 +391,8 @@ The dimension name (string).
 
 ### more-dimensions?
 
-Returns true if the are more dimensions in lookup table definition file to inspect, false otherwise.
+Returns true if the are more dimensions in lookup table definition file to
+inspect, false otherwise.
 
 #### Parameters
 
@@ -268,11 +418,18 @@ A lookup table.
 
 ### first-symbol
 
+Reset a symobol iterator over a lookup table definition file to the first
+symbol of the named dimension.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
++ Particular dimension (string)
+
 #### Returns
+
+Nothing
 
 ### get-symbol
 
@@ -280,39 +437,38 @@ A lookup table.
 
 + A look up table (lookup table object)
 
++ Particular dimension (string)
+
 #### Returns
 
-A lookup table.
+The next symbol for that dimension.
 
 ### more-symbols?
 
-#### Parameters
-
-+ A look up table (lookup table object)
-
-#### Returns
-
-A lookup table.
-
-### get 
+Returns true if the are more symbols in lookup table definition file to
+inspect for that named dimension, false otherwise.
 
 #### Parameters
 
 + A look up table (lookup table object)
 
++ Particular dimension (string)
+
 #### Returns
 
-A lookup table.
+True or false.
 
 ### states
 
+Iterates through all the states in no particular order.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
 #### Returns
 
-A lookup table.
++ An outcome (string)
 
 ### first-state
 
@@ -326,46 +482,79 @@ A lookup table.
 
 ### get-state
 
+Iterates over the outcomes or states of a particular look-up table. This is
+effectively the predicated results from specific sets of states.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
 #### Returns
 
-A lookup table.
+An outcome or a state (string).
 
 ### more-states?
 
+Iterating through the outcomes for a particular look up table, then are there
+any more outcomes available. True if there are, false otherwise.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
 #### Returns
 
+True or false.
 
 ### group
 
+This determines the name of a the group to which the dimension belongs.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
++ A named dimenison (string)
+
 #### Returns
 
-A lookup table.
++ A group name (string).
+
+### get 
+
+Gets a particular outcome or state based on the specified value for a group of
+dimensions.
+
+#### Parameters
+
++ A look up table (lookup table object)
+
++ A set of values (list of Strings)
+
+#### Returns
+
+A state or outcome (string)
 
 ### set 
 
+Overwrites a particular entry in the look-up table.
+
 #### Parameters
 
 + A look up table (lookup table object)
 
++ A set of values (list of Strings)
+
++ A value (string).
+
 #### Returns
 
-A lookup table.
+Nothing.
 
 ### default
 
-Set the default value returned
+Set the default value returned, if a pattern is not found in a look up table.
+
 #### Parameters
 
 + A look up table (lookup table object)
@@ -376,27 +565,36 @@ Nothing
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+Each of the primitives is made of use in the code. Notice nothing will happen if the code is working as expected
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+Extend the dimensions in the `test/lk.tree` file and add more rows to the
+`files/lk.data` file with more states.
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+The code can be used as the basis for any NetLogo model using a look-up table, with dimension of any size and consituted by any set of symbols.
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+This uses a tree structures, which allows a differing number of symbols per dimension, or even state. This means you can extend NetLogo with user-defined ordinals, if the coder so desires.
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
+This will and can be used in conjunction with the case-based reasoning extension to implement many land-use models.
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+### Authors
+
++ doug.salt@hutton.ac.uk
++ gary.polhill@hutton.ac.uk
+
+### Repository
+
+https://gitlab.com/doug.salt/lkt.git
+
 @#$#@#$#@
 default
 true

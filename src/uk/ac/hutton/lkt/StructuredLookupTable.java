@@ -216,9 +216,9 @@ public class StructuredLookupTable<T> extends LookupTable<String, T> {
 			{
 				if (next.containsKey("*"))
 				{
-					if (dimension.hasSymbol(this_input))
+					if (dimension.hasSymbol(this_input)) {
 						return next.get("*").lookup(input);
-					else
+                    } else
 						return (T)Default.defaultOutcome;
 				}
 				return (T)Default.defaultOutcome;

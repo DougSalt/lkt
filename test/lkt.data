@@ -1,8 +1,9 @@
-NoClimate	NoBiophys	LandUse
-NoClimate	NoBiophys	GL1	4.0
-NoClimate	NoBiophys	GL2	5.0
-NoClimate	NoBiophys	GL3	6.0
+ClimateType Biophys	LandUse
+DownClimate   NoBiophys	GL1	4.0
+NoClimate	YesBiophys  GL2	5.0
+NoClimate   *   GL3	6.0
 NoClimate	NoBiophys	AL1	4.5
-NoClimate	NoBiophys	AL2	Pickle
-NoClimate	NoBiophys	AL3	6.5
-DownClimate *   *   7.0
+NoClimate	NoBiophys   AL2	Pickle
+NoClimate   YesBiophys  AL3	6.5
+NoClimate	YesBiophys	AL4	9.0
+NoClimate YesBiophys  AL5 7.0

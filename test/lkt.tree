@@ -1,9 +1,9 @@
 Climate
-	NoClimate
+	ClimateType
 		NoClimate UpClimate DownClimate
 Biophysical
-	NoBiophys
-		NoBiophys
+	Biophys
+		NoBiophys YesBiophys
 LandUse
 	LandUse
-		GL1	GL2	GL3	AL1	AL2	AL3
+		GL1	GL2	GL3	AL1	AL2	AL3 AL4 AL5

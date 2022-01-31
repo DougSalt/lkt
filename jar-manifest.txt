@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Extension-Name: lkt
-Class-Manager: uk.ac.hutton.lt.StructuredLookupTableExtension
+Class-Manager: uk.ac.hutton.lkt.StructuredLookupTableExtension
 NetLogo-Extension-API-Version: 6.1
