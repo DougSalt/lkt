@@ -2,8 +2,6 @@
 
 Lookup table extension (lkt) for NetLogo.
 
-This is a small program to show how the look up table `lkt` extension works.
-
 An example of the a look up tree might be the following: 
 
 ```
