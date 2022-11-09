@@ -23,8 +23,8 @@ So the dimensions are `Player_1` and `Player_2`. These dimensions may only
 contain the values `Rock`, `Paper` and `Scissors` and the outcomes are
 
 + 0 - nobody wins
-+ 1 - Player_1 wins
-+ 2 - Player_2 wins.
++ 1 - Player\_1 wins
++ 2 - Player\_2 wins.
 
 Thus to implement a look up table we must have two files. First a file is
 required that defines the dimensions and the allowable values for those
@@ -67,52 +67,11 @@ And the data file would look similar to the following:
 
 ## INSTALLATION
 
-The file you are looking for is `lkt.jar` and maybe be found in `test/lt`.
-
-To use it, stick the file in a sub-directory in the same directory as your
-NetLogo called `lkt`.
-
-To use this, include the NetLogo plugin `lkt` in the extensions clause at the
-top of the NetLogo code:
-
-```
-extensions [lkt]
-```
+See the [installation instructions](INSTALL.md)
 
 # BUILD
 
-Assumptions: you are sane and running this on one of the following:
-
-1. Linux
-2. Cygwin on Windows
-3. Linux subsystem on Windows.
-
-In theory I could do all this with `.bat` files, but will only do so, if people
-really nag me about it.
-
-Have I mentioned anywhere else how much I absolutely detest and loathe Java. I
-have managed to compile this, but I have sorted out the dependencies are for
-creating the NetLogo plugin, and they are few. In Scala you can build a big jar
-- apparently not easily in Java. However because the dependencies in this are
-trivial, i.e. only the NetLogo library, then the lkt.jar is all that is needed.
-
-
-## Typical development workflow.
-
-1. Do you stuff in `src/main`, with testing in `src/test`
-2. `bin/compile.sh`
-3. `bin/build.sh` (does the release of the jar to the correct directory for
-   testing).
-4. `bin/run.sh`
-
-Rinse and repeat
-
-All the above can be done with: `bin/all.sh`
-
-To clean, then `bin/clean.sh`
-
-I have abandoned the usual conventions of of Java packaging, as NetLogo does
-not tend to work that way, being Scala based.
+See the [building instructions](BUILD.md)
 
 # MANIFEST
 
@@ -120,15 +79,14 @@ not tend to work that way, being Scala based.
   careful some IDEs automatically clear this directory on a clean - there are
   useful scripts that are not automatically generated present in this
   directory.
++ BUILD.md - instructions on how to build build the plug-in.
 + doc - documentation directory. Contains documentation. Be
   careful some IDEs automatically clear this directory on a clean - there are
   useful files that are not automatically generated present in this directory.
 + INSTALL.md - instructions on how to install the plug-in.
++ UPGRADING.md - instructions on how to install the plug-in.
 + jar-manifest.txt - manifest used to create the lkt.jar - the plugin.
 + lib - required libraries - these are already present in NetLogo.
-+ LICENSE.txt - How you may use this plugin.
-+ old-stuff - previous attempts at the plugin and redundant classes and scripts from this development iteratioin.
-+ paper - A paper describing the plugin.
 + README.md - this file.
 + src - The source code for the plugin. Normally this would be something like
   `src\uk\ac\hutton\lkt` or whatever. The problem with this is that the plugin
@@ -140,7 +98,6 @@ not tend to work that way, being Scala based.
   in this directory with instructions on how to do this. Also the actual plugin
   jar `lkt.jar` is in a subdirectory `lkt`, which is the jar you need to
   install the plugin.
-+ TODO - list of outstanding tasks to complete on the plugin.
 
 # INSTRUCTIONS
 

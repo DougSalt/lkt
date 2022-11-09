@@ -14,11 +14,15 @@
 
 #JAVAC=javac
 JAVAC=/usr/lib/jvm/java-8-openjdk/bin/javac
-CLASS_PATH=lib/netlogo-6.1.0.jar:bin:lib/scala-library.jar
+CLASS_PATH=lib/netlogo-6.1.0.jar:bin:lib/scala-library-2.12.4.jar
 if [ $(uname) = "CYGWIN_NT-10.0" ]
 then
     JAVAC='/cygdrive/c/Program Files/Java/jdk1.8.0_77/bin/javac'
     CLASS_PATH="bin;lib\netlogo-6.1.0.jar;lib\scala-library.jar"
+elif [ $(uname) = "Darwin" ]
+then
+    #JAVAC=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/bin/java
+    JAVAC=/usr/bin/javac
 fi
 
 if [ -n "$1" ]
