@@ -25,12 +25,12 @@ You are looking for the following casks (incidentally the difference between a
 "cask" and a "formulae" is that casks are pre compiled.
 
 ```
-adoptopenjdk8
+adoptopenjdk9
 ```
 
-To get Java 8 to run, then:
+To get Java 9 to run, then:
 ```
-export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
+export JAVA_HOME=$(/usr/libexec/java_home -v1.9)
 ```
 
 Remembering unless this you this in one the `*profile` or the `*rc` files then
