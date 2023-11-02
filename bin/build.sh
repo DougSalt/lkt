@@ -6,7 +6,7 @@ then
     JAR='/cygdrive/c/Program Files/Java/jdk1.8.0_77/jar'
 elif [ $(uname) = "Darwin" ]
 then
-    JAR=/usr/bin/jar
+    JAR="/usr/bin/jar"
 fi
 
 "$JAR" cvmf ../jar-manifest.txt ../test/lkt/lkt.jar \

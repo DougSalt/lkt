@@ -1,6 +1,6 @@
 See [here](https://github.com/NetLogo/NetLogo-Libraries#netlogo-libraries) for iinstructions.
 
-Fork the repository ihttps://github.com/NetLogo/NetLogo-Libraries in github.com. This is done by clicking the fork button in the right hand corner of the screen. Then clone this repository
+Fork the repository in https://github.com/NetLogo/NetLogo-Libraries in github.com. This is done by clicking the fork button in the right hand corner of the screen. Then clone this repository
 
 ```
 git clone git@github.com:/DougSalt/NetLogo-Libraries

@@ -27,13 +27,13 @@ fi
 
 if [ -n "$1" ]
 then
-    "$JAVAC" -d bin -cp $CLASS_PATH "$1"
+    "$JAVAC" --release 17 -d bin -cp $CLASS_PATH "$1"
     exit
 fi
 
 bin/clean.sh 2>/dev/null
 
-"$JAVAC" -d bin -cp $CLASS_PATH \
+"$JAVAC" --release 17 -d bin -cp $CLASS_PATH \
     src/uk/ac/hutton/lkt/Default.java \
 	src/uk/ac/hutton/lkt/Dimension.java \
 	src/uk/ac/hutton/lkt/Dimensions.java \
